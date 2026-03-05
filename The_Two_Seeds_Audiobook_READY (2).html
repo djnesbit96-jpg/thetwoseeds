@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Two Seeds — Audiobook</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-dim: #8a6f2e;
+    --dark: #0a0704;
+    --dark2: #110e08;
+    --dark3: #1c1608;
+    --parchment: #f5e6c8;
+    --parchment-dim: #c8b48a;
+    --red: #8B1A1A;
+    --blue: #0D2545;
+    --text: #e8d9b8;
+    --text-dim: #a0907a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Starfield background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(13,37,69,0.15) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(201,168,76,0.01) 2px, rgba(201,168,76,0.01) 3px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 48px 20px 32px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    margin-bottom: 32px;
+  }
+  .header-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .header-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(24px, 5vw, 40px);
+    color: var(--gold);
+    line-height: 1.2;
+    margin-bottom: 10px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+  .header-subtitle {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto 20px;
+  }
+  .header-ornament {
+    color: var(--gold);
+    font-size: 22px;
+    letter-spacing: 8px;
+    opacity: 0.6;
+  }
+
+  /* VOICE SETUP BANNER */
+  .voice-setup {
+    background: linear-gradient(135deg, rgba(139,26,26,0.15), rgba(13,37,69,0.15));
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .voice-setup-icon { font-size: 24px; flex-shrink: 0; }
+  .voice-setup strong { color: var(--gold); display: block; font-size: 15px; margin-bottom: 2px; }
+
+  /* VOICE CONTROLS */
+  .voice-panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .voice-panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 120px;
+  }
+  .control-group label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+  .control-group select,
+  .control-group input[type=range] {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 6px 10px;
+    font-family: 'EB Garamond', serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .control-group select:focus { outline: 1px solid var(--gold); }
+  .control-group input[type=range] {
+    padding: 4px 0;
+    accent-color: var(--gold);
+    width: 100%;
+  }
+  .range-val {
+    font-size: 12px;
+    color: var(--gold);
+    text-align: right;
+  }
+
+  /* PLAYER */
+  .player {
+    background: linear-gradient(160deg, rgba(201,168,76,0.08) 0%, rgba(0,0,0,0) 40%);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+  .now-playing-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .now-playing-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: var(--gold-light);
+    margin-bottom: 4px;
+    min-height: 28px;
+  }
+  .now-playing-chapter {
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    min-height: 20px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 6px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s linear;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 10px 22px;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: #0a0704;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 28px;
+  }
+  .btn-primary:hover { background: linear-gradient(135deg, var(--gold), var(--gold-light)); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-dim);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .btn-secondary:hover { background: rgba(201,168,76,0.1); color: var(--gold); }
+  .btn-danger {
+    background: rgba(139,26,26,0.2);
+    color: #cc6666;
+    border: 1px solid rgba(139,26,26,0.3);
+  }
+  .btn-danger:hover { background: rgba(139,26,26,0.35); }
+
+  .speaking-indicator {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--gold);
+    font-style: italic;
+  }
+  .speaking-indicator.active { display: flex; }
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* CHAPTERS */
+  .chapters-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .chapter-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    margin-bottom: 6px;
+  }
+  .chapter-item:hover {
+    background: rgba(201,168,76,0.06);
+    border-color: rgba(201,168,76,0.15);
+  }
+  .chapter-item.active {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.35);
+  }
+  .chapter-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--gold-dim);
+    min-width: 28px;
+    padding-top: 3px;
+  }
+  .chapter-info { flex: 1; }
+  .chapter-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .chapter-item.active .chapter-name { color: var(--gold-light); }
+  .chapter-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .chapter-play-icon {
+    font-size: 18px;
+    color: var(--gold-dim);
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding-top: 1px;
+  }
+  .chapter-item:hover .chapter-play-icon,
+  .chapter-item.active .chapter-play-icon { opacity: 1; color: var(--gold); }
+
+  /* READING PANE */
+  .reading-pane {
+    background: rgba(245,230,200,0.04);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 28px;
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .reading-pane h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .reading-pane p { margin-bottom: 14px; }
+  .reading-pane .scripture {
+    font-style: italic;
+    color: #8aaccc;
+    text-align: center;
+    padding: 12px 30px;
+    border-left: 2px solid rgba(201,168,76,0.3);
+    margin: 16px 0;
+  }
+  .reading-pane .callout {
+    font-style: italic;
+    color: var(--gold);
+    font-size: 17px;
+    text-align: center;
+    padding: 10px 0;
+    margin: 12px 0;
+  }
+  .reading-pane .narrator-note {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  /* highlight current sentence */
+  .highlight { background: rgba(201,168,76,0.18); border-radius: 3px; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0 0;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .controls-row { flex-direction: column; }
+    .reading-pane { padding: 20px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-eyebrow">An Audiobook</div>
+    <div class="header-title">The Two Seeds</div>
+    <div class="header-subtitle">From Eden to the End Times: Africa, The Watchers,<br/>The Three Faiths, and the Prophecy Unfolding Before Our Eyes</div>
+    <div class="header-ornament">✦ ✦ ✦</div>
+  </div>
+
+  <div class="voice-setup" id="voiceSetupBanner">
+    <div class="voice-setup-icon" id="voiceIcon">⏳</div>
+    <div>
+      <strong id="voiceStatusTitle">Selecting narrator voice…</strong>
+      <span id="voiceStatusDesc">Scanning your device for the deepest available voice.</span>
+    </div>
+  </div>
+
+  <!-- Hidden voice controls — auto configured -->
+  <select id="voiceSelect" style="display:none"></select>
+  <input type="range" id="rateSlider" min="0.5" max="1.2" step="0.02" value="0.82" style="display:none"/>
+  <input type="range" id="pitchSlider" min="0.5" max="1.5" step="0.05" value="0.80" style="display:none"/>
+  <span id="rateVal" style="display:none">0.82×</span>
+  <span id="pitchVal" style="display:none">0.80</span>
+
+  <!-- PLAYER -->
+  <div class="player">
+    <div class="now-playing-label">Now Playing</div>
+    <div class="now-playing-title" id="nowTitle">Select a chapter to begin…</div>
+    <div class="now-playing-chapter" id="nowChapter"></div>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-labels">
+      <span id="sentenceCount">—</span>
+      <span id="sentenceTotal">—</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="playBtn" onclick="togglePlay()">▶ PLAY</button>
+      <button class="btn btn-secondary" onclick="prevChapter()">◀ PREV</button>
+      <button class="btn btn-secondary" onclick="nextChapter()">NEXT ▶</button>
+      <button class="btn btn-danger" onclick="stopAll()">■ STOP</button>
+      <div class="speaking-indicator" id="speakingIndicator">
+        <div class="pulse-dot"></div> Narrator speaking…
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER LIST -->
+  <div class="chapters-title">Chapters</div>
+  <div id="chapterList"></div>
+
+  <!-- READING PANE -->
+  <div class="reading-pane" id="readingPane">
+    <h3>Select a chapter to read along</h3>
+    <p style="color:var(--text-dim); font-style:italic;">The full text will appear here as the narrator speaks. Each passage is highlighted as it is read aloud.</p>
+  </div>
+
+  <div class="footer">
+    "Ethiopia shall soon stretch out her hands unto God." — Psalm 68:31<br/><br/>
+    Open in Chrome or Edge for the widest voice selection.
+  </div>
+</div>
+
+<script>
+// ─── CHAPTERS ────────────────────────────────────────────────────────────────
+const CHAPTERS = [
+  {
+    part: "PART ONE",
+    title: "The Keepers of the Pure Flame",
+    chapter: "Chapter 1: Ethiopia — The Last Guardian",
+    desc: "The vault of original knowledge. The 81-book Bible. The Book of Enoch.",
+    segments: [
+      { type: "narrator", text: "Before Rome adopted Christianity. Before the Crusades. Before the Trans-Atlantic slave trade. Before all of it — there was Ethiopia." },
+      { type: "narrator", text: "The Kingdom of Aksum stands as one of the oldest continuous Christian civilizations on earth, predating Rome's adoption of Christianity by decades. But it was not merely an early adopter of the faith. Ethiopia was the preserver — the vault — the last firewall against the erasure of the original teaching." },
+      { type: "narrator", text: "While every other tradition was stripping books from its holy canon, Ethiopia kept them. The Ethiopian Orthodox Bible contains 81 books. The Catholic Bible has 73. The Protestant Bible, 66. The Jewish Tanakh, only 24." },
+      { type: "callout", text: "That is not a coincidence. That is editorial control serving power. The further you move from Ethiopia, the more disappears." },
+      { type: "narrator", text: "Among the books Ethiopia preserved while all others removed them: The Book of Enoch. The Book of Jubilees. The Kebra Nagast — the Glory of Kings — which documents the Ark of the Covenant, King Solomon's relationship with the Queen of Sheba, and the birth of Menelik the First, the son who carried the Ark back to Africa." },
+      { type: "narrator", text: "And Ethiopia asked a question that the three Abrahamic faiths have never been able to answer: Why would you remove a book unless it implicated you?" },
+      { type: "narrator", text: "My theory — and the evidence I will lay before you throughout this book — is this: Ethiopia, and the ancient Moors and the Egypt of Imhotep's era, stayed true to the original teaching of righteousness. They were the pure side. And that is precisely why the three great Abrahamic faiths each played their own role in the systematic destruction of ancient Africa." },
+      { type: "narrator", text: "The Christians came with the Crusades and the burning of knowledge. The Arabs defiled Egypt, crossed bloodlines, introduced new gods, and corrupted the ancient understanding. And the Jewish merchant class laid the financial foundation for the machinery of human slavery so profitable it created the stock market the world still uses today." },
+      { type: "callout", text: "This is not hatred of any people. The corrupt side exists within all three faiths. The pure side also exists within all three. Understanding the difference is the entire point of this book." },
+    ]
+  },
+  {
+    part: "PART ONE",
+    title: "The Watchers",
+    chapter: "Chapter 2: What Egypt Actually Knew",
+    desc: "The animal gods decoded. The Plagues as power confrontation. The Golden Calf.",
+    segments: [
+      { type: "narrator", text: "The animal-headed gods of ancient Egypt were not primitive mythology. The Pharaohs were not inventing gods out of fear and ignorance. They knew exactly what they were representing." },
+      { type: "narrator", text: "According to the Book of Enoch — the text Ethiopia preserved while everyone else removed it — the Watchers were real beings. They descended. They corrupted humanity. They introduced forbidden knowledge. They intermarried with humans and demanded worship. And God judged them for it." },
+      { type: "narrator", text: "The Egyptian gods were deliberate iconographic records of those beings, carved in stone so the knowledge of who was being served would never be lost." },
+      { type: "narrator", text: "The bull god Apis was not a celebration of agriculture. He was a direct representation of Baal — the Watcher deity who demanded child sacrifice. When the Israelites built the Golden Calf after their exodus from Egypt, it was not confusion. They had lived inside the Watcher worship system for four hundred years. They knew exactly who they were calling on. Which is why God's judgment was so swift and so severe." },
+      { type: "narrator", text: "Anubis the jackal-headed god represented Watcher knowledge of death and the underworld. Horus the falcon-headed god represented the corrupted bloodline between divine and human. Set represented the destructive Watcher archetype — the being of chaos the Book of Enoch calls the legacy of the fallen." },
+      { type: "scripture", text: '"They sacrificed to demons, not to God." — Deuteronomy 32 verse 17' },
+      { type: "narrator", text: "This reframes the Exodus entirely. God was not dismantling superstition. He was dismantling an active Watcher worship system that the Pharaonic class was knowingly operating. Each plague was a direct power confrontation between God and the specific Watcher being worshipped." },
+      { type: "narrator", text: "The plague of darkness defeated Ra. The plague on cattle defeated Apis and Baal. The plague of locusts defeated Osiris. The death of the firstborn defeated the Pharaoh's claim to divine bloodline — the claim that the ruling class descended from the Watchers themselves." },
+      { type: "callout", text: "God was not fighting symbols. He was dismantling a system." },
+    ]
+  },
+  {
+    part: "PART TWO",
+    title: "The Foundation Stone",
+    chapter: "Chapter 3: The Rock That Holds the World",
+    desc: "One rock. Three faiths. The prophecy of what happens next.",
+    segments: [
+      { type: "narrator", text: "In the old city of Jerusalem, on a hill called Mount Moriah — one of the oldest sacred hills on earth — there is a bare rock. It does not look like much. But it is considered by billions of people to be the holiest spot on earth." },
+      { type: "callout", text: "Three faiths. One rock. And the prophecy of what happens next involves all three." },
+      { type: "narrator", text: "Jews believe this is the spot where God gathered dust to create Adam — the first human being. They believe this is where Abraham brought his son Isaac as a test of faith. The Torah commands that Jews may only publicly worship God at this exact location. Because of that commandment, King Solomon built the First Temple here around 957 BC — the absolute center of Jewish religious life." },
+      { type: "narrator", text: "The Babylonians destroyed it in 586 BC. The Jews rebuilt it. Herod the Great expanded the Second Temple into one of the most magnificent structures in the ancient world. Jesus preached inside it. And in one of his sermons, Jesus said these words:" },
+      { type: "scripture", text: '"Not one stone will be left standing upon another." — Matthew 24' },
+      { type: "narrator", text: "Thirty-seven years later, in 70 AD, the Roman general Titus destroyed Jerusalem and tore the Temple apart stone by stone — exactly as Jesus had predicted. The Diaspora began. For nearly two thousand years, the Jewish people scattered across the earth. Without the Temple, core Torah Judaism simply cannot be practiced. Their own holy text says so. That wound has never healed." },
+      { type: "narrator", text: "Muslims believe the Prophet Muhammad was taken by God on a miraculous night journey from Mecca to Jerusalem, and then up through the seven heavens to stand before God. They believe he ascended into heaven from the Foundation Stone — the exact same rock that Jews consider the holiest spot on earth. Jerusalem is the third holiest city in Islam. And in the early months of Islam, before God instructed otherwise, Muslims prayed facing Jerusalem — not Mecca." },
+      { type: "narrator", text: "Christians believe Jesus preached on the Temple Mount. They believe he was crucified just outside Jerusalem at Golgotha — the place of the skull. They believe he rose from the dead three days later. And when Jesus said, I am the Temple, Christians understand this as Jesus declaring himself the new living Temple — that God would no longer dwell in a building of stone, but in the person of Christ, and through Christ in every believer." },
+    ]
+  },
+  {
+    part: "PART TWO",
+    title: "When the Three Faiths Chose Unity",
+    chapter: "Chapter 4: Moments of the Pure Side",
+    desc: "King Abdullah. The Muslim keepers of the Church. The general who gave back the Temple Mount.",
+    segments: [
+      { type: "narrator", text: "Now I want to tell you something the history books rarely lead with. Because in between all the wars and the conquests and the betrayals — there are moments. Extraordinary, documented, undeniable moments when Muslim, Christian, and Jew chose each other over conflict." },
+      { type: "callout", text: "These are not myths. These are historical facts. And they point to the pure side of all three traditions being capable of what the corrupt side has always tried to prevent." },
+      { type: "narrator", text: "King Abdullah the Second of Jordan is a Muslim sovereign and a direct descendant of the Prophet Muhammad. His family — the Hashemites — are among the most ancient bloodlines still holding political power on earth. And this Muslim king personally funded the restoration of Jesus' tomb inside the Church of the Holy Sepulchre in Jerusalem — at his own expense." },
+      { type: "narrator", text: "The Aedicule — the small shrine enclosing the tomb — was restored in a four-million-dollar project. King Abdullah contributed significantly from personal royal funds. He later received the Templeton Prize and pledged those funds entirely to the restoration of Jerusalem's holy sites — Christian holy sites. From a Muslim king." },
+      { type: "callout", text: "A descendant of the Prophet Muhammad, personally paying for the restoration of the burial place of Jesus. If that does not stop you — read it again." },
+      { type: "narrator", text: "But King Abdullah's act is not even the most extraordinary expression of interfaith unity in Jerusalem. That distinction belongs to a story unfolding quietly every single morning for over eight hundred and fifty years." },
+      { type: "narrator", text: "The Church of the Holy Sepulchre is the holiest site in Christianity — the place where Jesus was crucified, buried, and believed by Christians to have risen from the dead. Multiple Christian denominations share it: Greek Orthodox, Roman Catholic, Armenian Apostolic, Coptic, Syrian, and Ethiopian Orthodox. For centuries they could not agree on which branch should hold the keys." },
+      { type: "narrator", text: "So in 1187, the great Muslim leader Saladin gave the keys to two Palestinian Muslim families. The Joudeh Al-Husseini family became the sole legitimate custodians of the keys. The Nuseibeh family was entrusted to open and close the doors." },
+      { type: "narrator", text: "And every single morning since — for eight hundred and fifty years — a member of the Joudeh family brings the ancient key to the church, surrenders it to a member of the Nuseibeh family, and the Christian church is opened for the day by Muslim hands." },
+      { type: "scripture", text: '"If the key were held by the Greek Orthodox, it would mean they own the church. If by Catholics, it would be a Catholic church. Muslims are neutral. We open and close for everyone." — Joudeh Family' },
+      { type: "narrator", text: "This arrangement did not begin with Saladin. It originated under the second Islamic Caliph, Umar, who entered Jerusalem in 638 AD and signed a covenant guaranteeing Christians the right to worship freely — hoping to prevent clashes among rival Christian sects. A Muslim leader protecting Christian worship. In 638 AD." },
+      { type: "narrator", text: "In 1967, during the Six-Day War, Israeli paratroopers captured the Temple Mount — restoring Jewish access to their holiest site for the first time in 1,900 years. An Israeli flag was installed over the Dome of the Rock. Israeli Defense Minister Moshe Dayan ordered it taken down. He then returned administrative authority over the Temple Mount to the Islamic Waqf — the Muslim religious trust." },
+      { type: "callout", text: "A Jewish military commander who had just won one of the most stunning victories in modern history, voluntarily returning one of Judaism's holiest sites to Muslim administration, as an act of restraint and respect." },
+      { type: "narrator", text: "In the 12th century, a Muslim diplomat visited Jerusalem and was welcomed by the Knights Templar — Christian Crusaders — who allowed him to pray at the Al-Aqsa Mosque. When a newly arrived Christian tried to redirect his prayer away from Mecca, the Templars threw their own man out and apologized to their Muslim guest. A Crusader knight defending a Muslim's right to pray toward Mecca. In the 12th century. In Jerusalem." },
+      { type: "narrator", text: "In 1492, when Christian Spain expelled both Jews and Muslims, Ottoman Sultan Beyazit the Second welcomed one hundred and fifty thousand Jewish refugees to Turkey — offering land, tax exemptions, and full freedom to practice their faith. A Muslim empire saving Jewish civilization at the moment of its greatest crisis." },
+      { type: "callout", text: "The theme is always the same: when the pure side acts — when the real teaching governs — the three faiths recognize each other as family." },
+    ]
+  },
+  {
+    part: "PART THREE",
+    title: "Solomon's Betrayal",
+    chapter: "Chapter 5: The King Who Chose the Darkness",
+    desc: "The Testament of Solomon. The Star of David. Muhammad's arc. The pattern.",
+    segments: [
+      { type: "narrator", text: "King Solomon. The wisest man who ever lived, according to scripture. The builder of the First Temple. The keeper of the Ark. The son of David, the man after God's own heart." },
+      { type: "narrator", text: "And the man who — according to his own historical document, the Testament of Solomon — summoned and commanded demons using a magical seal, had those demons help build the Temple, and was led by his Canaanite wives into worshipping foreign gods, including Moloch — who demanded child sacrifice." },
+      { type: "narrator", text: "This is not speculation. It is documented in First Kings, chapter 11. It is confirmed by the Testament of Solomon, a real historical document taken seriously by scholars. The seal Solomon used — what we now call the Star of David — was his instrument for summoning and binding demonic forces." },
+      { type: "callout", text: "The Temple was built with the most sacred intention, and then defiled from within. The holy stones corrupted. This is the pattern. This is always the pattern." },
+      { type: "narrator", text: "Muhammad began pure. His first message in Mecca was identical to the message of every true prophet before him: destroy the idols, there is only one God, care for the orphan, end the exploitation of the weak. The wealthy merchant class immediately tried to destroy him — the same pattern as every true prophet. The corrupt system always attacks the pure message first." },
+      { type: "narrator", text: "But something shifted after Medina. Power arrived. Military command arrived. And what began as purely spiritual teaching gradually merged with political and military force — the same corruption that consumed Solomon, the same pattern that Rome used to weaponize Jesus." },
+      { type: "narrator", text: "Muhammad was probably a genuine receiver of revelation in his early Meccan period, gradually compromised by the same addiction to power that corrupted every figure we examine, and then weaponized after his death by the corrupt side of the tradition he started — exactly as Jesus was weaponized by Rome and Moses by the Pharisaic priestly class." },
+      { type: "callout", text: "The pure side of Islam exists. The Sufi tradition. The early Meccan revelations. The pure side exists within Christianity and within Judaism too. The enemy is never a people. The enemy is always the system." },
+    ]
+  },
+  {
+    part: "PART FOUR",
+    title: "The Two Seeds",
+    chapter: "Chapter 6: The War That Has Always Been",
+    desc: "Genesis 3:15. The pure side and the corrupt side within every tradition.",
+    segments: [
+      { type: "narrator", text: "God told the serpent directly after the fall:" },
+      { type: "scripture", text: '"I will put enmity between you and the woman, and between your offspring and hers." — Genesis 3 verse 15' },
+      { type: "narrator", text: "This established from the very beginning that there would be two bloodlines, two systems, two sides operating simultaneously throughout all of human history. Not two religions. Two orientations within every religion." },
+      { type: "narrator", text: "The pure side is always characterized by the same things across every tradition and every century: preservation of original knowledge, care for the poor and the oppressed, rejection of worldly power, and direct relationship with God without institutional mediation. Jesus demonstrated this when he rejected Satan's offer of all the kingdoms of the world — the very offer that Solomon accepted." },
+      { type: "narrator", text: "The corrupt side is always characterized by: editing and controlling scripture, accumulation of wealth and power, using religion to justify exploitation, and demanding institutional obedience over personal conscience. Jeremiah named it. Paul named it. And Jesus named it most devastatingly of all — looking directly at the most religiously orthodox, institutionally powerful, doctrinally correct people in the room:" },
+      { type: "scripture", text: '"You are of your father the devil, and the desires of your father you want to do. He was a murderer from the beginning." — John 8 verse 44' },
+      { type: "narrator", text: "He was not talking to pagans or atheists. He was talking to the High Priests. The keepers of the Temple. The most religious people in the room. The wolves wearing the most convincing religious clothing." },
+      { type: "narrator", text: "Within Judaism — the pure side were the prophets who rebuked the corrupt priests: Jeremiah, Isaiah, Amos. The corrupt side were the priests who edited scripture for profit and power. Within Christianity — the pure side was the early church that held all things in common and served the poor. The corrupt side was the institution that built empires, ran inquisitions, and covered abuse. Within Islam — the pure side is the Sufi tradition. The corrupt side produced the political caliphates that immediately weaponized the faith for conquest." },
+      { type: "callout", text: "Ethiopia is the only civilization that maintained the pure side continuously — because they received the teaching directly, their Christianity came before Rome corrupted it, and they preserved the texts the corrupt side removed." },
+    ]
+  },
+  {
+    part: "PART FIVE",
+    title: "Babylon — The System Behind the System",
+    chapter: "Chapter 7: Naming the System",
+    desc: "Slavery, wars, drugs, AI, and Epstein — one fingerprint across all of history.",
+    segments: [
+      { type: "narrator", text: "What we have traced across this entire book is not a conspiracy theory. We have traced a single consistent pattern across all of human history: a system built by those who chose the Watchers over God — worldly power without moral accountability — operating continuously from the Garden to right now." },
+      { type: "narrator", text: "The Bible names this system with one word: Babylon." },
+      { type: "scripture", text: '"Babylon the great, the mother of prostitutes and of the abominations of the earth." — Revelation 17 verse 5' },
+      { type: "callout", text: "Not a city. A system. A way of organizing power that puts exploitation at its center." },
+      { type: "narrator", text: "The Trans-Atlantic slave trade was the financial foundation of modern capitalism. Sephardic Jewish merchants designed and operated the plantation model in Brazil that proved African enslaved labor was monumentally profitable. They brought that blueprint to Barbados and the Caribbean. Every European crown that subsequently entered the slave trade followed their proven model. The stock market, the banking system, the insurance industry — all trace their roots directly to the financing of human slavery. Revelation named it centuries earlier: the cargo of bodies and souls of men." },
+      { type: "narrator", text: "Both World Wars were financed by the same banking networks. The Babylon system requires war because war is the most profitable enterprise. The CIA deliberately flooded Black communities with crack cocaine in the 1980s — documented by the Church Committee and journalist Gary Webb. The same system. The same target. The same mechanism. Different century." },
+      { type: "narrator", text: "The Epstein network was the modern manifestation of Moloch worship — the most powerful people in the world, participating in the ritual exploitation of children. Solomon built an altar to Moloch in First Kings chapter 11. The same spirit operating three thousand years later in different clothing." },
+      { type: "narrator", text: "And artificial intelligence in the wrong hands — the attempt to build autonomous intelligence beyond human moral accountability — is precisely what the Watchers did to humanity. The Book of Enoch described the forbidden knowledge they introduced. Artificial intelligence is the most concentrated accumulation of forbidden knowledge in human history." },
+      { type: "callout", text: "The enemy is not a people. The enemy is the system. And the system is exactly what Jesus, Enoch, Isaiah, Paul, and Revelation all described." },
+    ]
+  },
+  {
+    part: "PART SIX",
+    title: "The Prophecy Unfolding",
+    chapter: "Chapter 8: The Third Temple and the End of the Age",
+    desc: "The Temple Movement. Iran. The prophecy checklist. The final word.",
+    segments: [
+      { type: "narrator", text: "Here is where everything becomes urgent." },
+      { type: "narrator", text: "A small but politically powerful minority within Israel — the Temple Movement — believes the Third Temple should be built now, by human hands, on the exact site where the Dome of the Rock and Al-Aqsa Mosque currently stand. They have already built over 60 sacred objects for Temple worship. They are breeding red heifers whose ashes are required — according to the Book of Numbers — for the purification ritual that must precede Temple worship. They have built an altar. They are training priests." },
+      { type: "narrator", text: "You cannot build the Third Temple without demolishing the Dome of the Rock and Al-Aqsa Mosque. Al-Aqsa is the third holiest site in Islam — sacred to 1.8 billion Muslims worldwide. Any attempt to demolish it would likely be the single most explosive event in modern human history." },
+      { type: "narrator", text: "Iran and Israel were once allies. Iran was one of the first Muslim-majority nations to recognize Israel. They cooperated on military intelligence. They built missiles together through a joint program called Project Flower. One single event changed everything: the 1979 Islamic Revolution. Overnight, Iran went from Israel's closest regional partner to its most declared enemy." },
+      { type: "narrator", text: "Iran built the Axis of Resistance — a ring of proxy forces surrounding Israel on every side: Hezbollah to the north in Lebanon, Hamas to the southwest in Gaza, Houthi forces to the south in Yemen, and Shia militias to the east in Iraq. Iran is important not because of oil or even nuclear weapons. Iran is important because it is the last major power standing between the Temple Movement's goals and their execution." },
+      { type: "narrator", text: "Julian the Apostate — the Roman Emperor who tried to rebuild the Temple in 363 AD to prove Jesus wrong — was killed while invading Iran. History does not repeat. But it rhymes with eerie precision." },
+      { type: "narrator", text: "The evangelical Christian end-times framework — held by tens of millions of Americans and embedded in United States foreign policy since Ronald Reagan — describes a specific sequence. The Jewish people return to Israel. Checked — 1948. Jerusalem is recaptured by Israel. Checked — 1967. The Third Temple is rebuilt. Not yet. Then the Antichrist rises. Then Armageddon. Then the Second Coming." },
+      { type: "narrator", text: "Some of the actual human beings pulling triggers and making policy decisions in this conflict genuinely believe they are fulfilling scripture. They are not hiding it. Senator Lindsey Graham said it plainly: This is a religious war." },
+      { type: "narrator", text: "The Book of Enoch — preserved by Ethiopia, removed by everyone else — says that God would return to judge the Watchers and all who followed them. The three Abrahamic traditions that removed that book are now collectively building the stage for what that book prophesied. The people who kept the book are watching the people who removed it fulfill exactly what the book said they would do." },
+      { type: "callout", text: "That is either the most extraordinary coincidence in human history — or it is exactly what it appears to be." },
+    ]
+  },
+  {
+    part: "CLOSING",
+    title: "The Final Word",
+    chapter: "Closing Narration",
+    desc: "What we discovered. What it means. And the prophecy of Ethiopia.",
+    segments: [
+      { type: "narrator", text: "We did not discover a conspiracy theory in this book." },
+      { type: "narrator", text: "We traced the Bible's own narrative from Genesis to Revelation — using history as the evidence." },
+      { type: "narrator", text: "We found that every original dark-skinned civilization across every continent — Africa, the Americas, Asia, Australia, the Caucasus, the Middle East — shared the same things: direct relationship with God and creation without institutional mediation, sophisticated moral frameworks predating Abrahamic codification, advanced knowledge in architecture, astronomy, agriculture and medicine, and systematic destruction by the same Babylon system operating through different cultural vehicles." },
+      { type: "narrator", text: "We found that the pure side of every tradition — the prophets who rebuked the corrupt priests, the Sufi masters who chose God over power, the Muslim king who restored the tomb of Jesus, the Israeli general who gave back the Temple Mount, the Muslim families who open Christianity's holiest church every single morning — all point toward the same truth:" },
+      { type: "callout", text: "The war was never between Islam and Christianity and Judaism. The war has always been between the pure side and the corrupt side within all three." },
+      { type: "scripture", text: '"My people are destroyed for lack of knowledge." — Hosea 4 verse 6' },
+      { type: "narrator", text: "Now you have the knowledge." },
+      { type: "narrator", text: "The question the Book of Enoch, the prophets of Israel, the teaching of Jesus, the wisdom of the Sufi, and the chronicles of Ethiopia all converge on — is the same question you now carry with you:" },
+      { type: "scripture", text: '"Ethiopia shall soon stretch out her hands unto God." — Psalm 68 verse 31' },
+      { type: "callout", text: "The original people are still here. The pure teaching is still alive. And the prophecy is unfolding." },
+    ]
+  },
+];
+
+// ─── ELEVENLABS CONFIG ────────────────────────────────────────────────────────
+// Paste your ElevenLabs API key below between the quotes
+const ELEVENLABS_API_KEY = "sk_aa35b03442226e947c474a5a28a3db23f85c80bb91d1fabd";
+
+// "Hakeem" — African American Narrator, deep and authoritative
+const ELEVENLABS_VOICE_ID = "cQb5fnQsTT1X0GdpmHoo";
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentChapter = 0;
+let currentSegment = 0;
+let isPlaying = false;
+let currentAudio = null;
+let audioCache = {};
+
+// ─── INIT BANNER ─────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY === "PASTE_YOUR_API_KEY_HERE") {
+    document.getElementById('voiceIcon').textContent = '⚠️';
+    document.getElementById('voiceStatusTitle').textContent = 'API Key Required';
+    document.getElementById('voiceStatusDesc').textContent =
+      'Open this file in a text editor and paste your ElevenLabs API key where it says sk_aa35b03442226e947c474a5a28a3db23f85c80bb91d1fabd';
+    document.getElementById('voiceSetupBanner').style.borderColor = 'rgba(255,100,100,0.4)';
+  } else {
+    document.getElementById('voiceIcon').textContent = '🎙️';
+    document.getElementById('voiceStatusTitle').textContent = 'Narrator Ready — Your Selected Voice (AI Narrator)';
+    document.getElementById('voiceStatusDesc').textContent =
+      'Deep human-quality AI professor voice powered by ElevenLabs. Click any chapter to begin.';
+    document.getElementById('voiceSetupBanner').style.borderColor = 'rgba(201,168,76,0.5)';
+    document.getElementById('voiceSetupBanner').style.background =
+      'linear-gradient(135deg, rgba(201,168,76,0.08), rgba(13,37,69,0.12))';
+  }
+});
+
+// ─── CHAPTER LIST ─────────────────────────────────────────────────────────────
+function buildChapterList() {
+  const list = document.getElementById('chapterList');
+  CHAPTERS.forEach((ch, idx) => {
+    const div = document.createElement('div');
+    div.className = 'chapter-item';
+    div.id = 'chapter-item-' + idx;
+    div.onclick = () => loadChapter(idx, true);
+    div.innerHTML = `
+      <div class="chapter-num">${String(idx + 1).padStart(2, '0')}</div>
+      <div class="chapter-info">
+        <div class="chapter-name">${ch.chapter}</div>
+        <div class="chapter-desc">${ch.desc}</div>
+      </div>
+      <div class="chapter-play-icon">▶</div>
+    `;
+    list.appendChild(div);
+  });
+}
+buildChapterList();
+
+// ─── LOAD CHAPTER ─────────────────────────────────────────────────────────────
+function loadChapter(idx, autoPlay) {
+  stopAll();
+  currentChapter = idx;
+  currentSegment = 0;
+
+  const ch = CHAPTERS[idx];
+  document.getElementById('nowTitle').textContent = ch.chapter;
+  document.getElementById('nowChapter').textContent = ch.part + ' — ' + ch.title;
+  updateProgress();
+  renderReading();
+
+  document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+  const item = document.getElementById('chapter-item-' + idx);
+  if (item) { item.classList.add('active'); item.scrollIntoView({behavior: 'smooth', block: 'nearest'}); }
+
+  if (autoPlay) startPlaying();
+}
+
+// ─── RENDERING ────────────────────────────────────────────────────────────────
+function renderReading() {
+  const ch = CHAPTERS[currentChapter];
+  const pane = document.getElementById('readingPane');
+  pane.innerHTML = `<h3>${ch.chapter}</h3>`;
+  ch.segments.forEach((seg, i) => {
+    const el = document.createElement('p');
+    el.id = 'seg-' + i;
+    if (seg.type === 'scripture') el.className = 'scripture';
+    else if (seg.type === 'callout') el.className = 'callout';
+    else if (seg.type === 'narrator') el.className = '';
+    el.textContent = seg.text;
+    pane.appendChild(el);
+  });
+}
+
+function highlightSegment(idx) {
+  document.querySelectorAll('#readingPane p').forEach(p => p.classList.remove('highlight'));
+  const el = document.getElementById('seg-' + idx);
+  if (el) {
+    el.classList.add('highlight');
+    el.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+}
+
+function updateProgress() {
+  const ch = CHAPTERS[currentChapter];
+  const total = ch.segments.length;
+  const pct = total > 0 ? (currentSegment / total) * 100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('sentenceCount').textContent = 'Passage ' + (currentSegment + 1);
+  document.getElementById('sentenceTotal').textContent = 'of ' + total;
+}
+
+// ─── ELEVENLABS SPEECH ENGINE ─────────────────────────────────────────────────
+function setPlayerLoading(loading) {
+  const btn = document.getElementById('playBtn');
+  if (loading) {
+    btn.textContent = '⏳ Loading…';
+    btn.disabled = true;
+  } else {
+    btn.textContent = '⏸ PAUSE';
+    btn.disabled = false;
+  }
+}
+
+async function fetchElevenLabsAudio(text, segType) {
+  // Tune stability/similarity for professor gravitas
+  const stability = segType === 'callout' ? 0.72 : segType === 'scripture' ? 0.78 : 0.60;
+  const similarity = 0.80;
+  const style = segType === 'callout' ? 0.35 : 0.20;
+
+  const response = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}/stream`,
+    {
+      method: 'POST',
+      headers: {
+        'xi-api-key': ELEVENLABS_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: text,
+        model_id: 'eleven_turbo_v2_5',
+        voice_settings: {
+          stability: stability,
+          similarity_boost: similarity,
+          style: style,
+          use_speaker_boost: true,
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error('ElevenLabs error: ' + response.status + ' — ' + err);
+  }
+
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+}
+
+async function speakSegment(idx) {
+  if (!isPlaying) return;
+
+  if (idx >= CHAPTERS[currentChapter].segments.length) {
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶ PLAY';
+    document.getElementById('playBtn').disabled = false;
+    document.getElementById('speakingIndicator').classList.remove('active');
+    document.querySelectorAll('#readingPane p').forEach(p => p.classList.remove('highlight'));
+    updateProgress();
+    return;
+  }
+
+  currentSegment = idx;
+  updateProgress();
+  highlightSegment(idx);
+
+  const seg = CHAPTERS[currentChapter].segments[idx];
+  const cacheKey = `ch${currentChapter}_seg${idx}`;
+
+  try {
+    setPlayerLoading(true);
+
+    let audioUrl = audioCache[cacheKey];
+    if (!audioUrl) {
+      audioUrl = await fetchElevenLabsAudio(seg.text, seg.type);
+      audioCache[cacheKey] = audioUrl;
+    }
+
+    if (!isPlaying) return;
+
+    document.getElementById('playBtn').textContent = '⏸ PAUSE';
+    document.getElementById('playBtn').disabled = false;
+
+    const audio = new Audio(audioUrl);
+    currentAudio = audio;
+
+    // Slight speed adjustment for callouts — slower, more gravitas
+    audio.playbackRate = seg.type === 'callout' ? 0.92 : seg.type === 'scripture' ? 0.88 : 1.0;
+
+    audio.onended = () => {
+      if (isPlaying) {
+        const pause = seg.type === 'callout' ? 1000 : seg.type === 'scripture' ? 800 : 250;
+        setTimeout(() => speakSegment(idx + 1), pause);
+      }
+    };
+
+    audio.onerror = () => {
+      if (isPlaying) speakSegment(idx + 1);
+    };
+
+    await audio.play();
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('voiceIcon').textContent = '⚠️';
+    document.getElementById('voiceStatusTitle').textContent = 'Error — Check API Key';
+    document.getElementById('voiceStatusDesc').textContent = err.message;
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶ PLAY';
+    document.getElementById('playBtn').disabled = false;
+    document.getElementById('speakingIndicator').classList.remove('active');
+  }
+}
+
+function startPlaying() {
+  isPlaying = true;
+  document.getElementById('speakingIndicator').classList.add('active');
+  speakSegment(currentSegment);
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    isPlaying = false;
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    document.getElementById('playBtn').textContent = '▶ PLAY';
+    document.getElementById('playBtn').disabled = false;
+    document.getElementById('speakingIndicator').classList.remove('active');
+  } else {
+    if (currentSegment >= CHAPTERS[currentChapter].segments.length) currentSegment = 0;
+    startPlaying();
+  }
+}
+
+function stopAll() {
+  isPlaying = false;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  currentSegment = 0;
+  document.getElementById('playBtn').textContent = '▶ PLAY';
+  document.getElementById('playBtn').disabled = false;
+  document.getElementById('speakingIndicator').classList.remove('active');
+  document.querySelectorAll('#readingPane p').forEach(p => p.classList.remove('highlight'));
+  updateProgress();
+}
+
+function nextChapter() {
+  if (currentChapter < CHAPTERS.length - 1) loadChapter(currentChapter + 1, isPlaying);
+}
+
+function prevChapter() {
+  if (currentChapter > 0) loadChapter(currentChapter - 1, isPlaying);
+}
+
+// Initialize with chapter 1 loaded (not playing)
+loadChapter(0, false);
+</script>
+</body>
+</html>
